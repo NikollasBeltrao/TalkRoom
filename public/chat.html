@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalkRoom</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+            width: 100vw;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            background-color: #F1F1F1;
+            
+        }
+
+        .sidebar {
+            width: 30%;
+            height: 100%;
+            overflow-y: auto;
+            background-color: white;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            float: left;
+        }
+
+        .newRoom input {
+            padding: 10px;
+            border-radius: 3px;
+        }
+
+        button {
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #00695c;
+            color: white;
+        }
+
+        .sidebar h2 {
+            border-bottom: solid 1px rgb(202, 202, 202);
+            color: black;
+            padding: 0px 20px;
+        }
+
+        #userRooms {
+            margin: 0px 20px;
+        }
+
+        #userRooms li,
+        .newRoom {
+            border-bottom: solid 1px rgb(202, 202, 202);
+            cursor: pointer;
+            color: black;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        #userRooms li:hover {
+            background-color: rgb(221, 221, 221);
+        }
+
+        #userRooms li button {
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #chat {
+            height: 100%;
+            max-height: 100%;
+            width: 70%;
+            float: right;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: #F1F1F1;
+            border-left: 1px solid gray;
+            box-shadow: 1px 3px 8px rgba(0, 0, 0, .45);
+        }
+
+        #chat .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #headChat {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            font-weight: bold;
+            text-align: left;
+            font-size: 20px;
+            padding: 10px 20px;
+            border-bottom: solid 1px rgb(202, 202, 202);
+            box-shadow: 1px 3px 8px rgba(0, 0, 0, .45);
+            background-color: white;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+        }
+
+
+        #messages {
+            width: 100%;
+            margin: 44px 0px;
+            margin-bottom: 57px;
+            height: 100%;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .message {
+            position: relative;
+            background-color: white;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            box-shadow: 1px 3px 8px rgba(0, 0, 0, .45);
+            padding: 10px;
+            width: auto;
+            align-self: flex-start;
+            z-index: 100;
+        }
+
+        .message.right {
+            align-self: flex-end;
+            background-color: #D9FDD3;
+        }
+
+        .message::before {
+            content: "";
+            position: absolute;
+            border-left: 10px solid white;
+            border-right: 10px solid transparent;
+            border-top: 10px solid white;
+            border-bottom: 10px solid transparent;
+            top: 0px;
+        }
+
+        .message.left::before {
+            left: -10px;
+            rotate: 90deg;
+        }
+
+        .message.right::before {
+            border-left: 10px solid #D9FDD3;
+            border-top: 10px solid #D9FDD3;
+            right: -10px;
+        }
+
+        .footerChat {
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            background-color: white;
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footerChat input {
+            padding: 10px;
+            border-radius: 3px;
+            width: 100%;
+        }
+
+        .footerChat button {
+           margin: 0px 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>Chats</h2>
+        <div class="newRoom">
+            <input type="text" id="newRoom" placeholder="Nova Sala">
+            <button id="enterNewRoom">Criar sala</button>
+        </div>
+        <ul id="userRooms"></ul>
+    </div>
+    <div id="chat">
+        <h1>TalkRoom <br> <span>Bem vindo(a)</span></h1>
+        <div class="container">
+            <div id="headChat"></div>
+            <ul id="messages"></ul>
+            <div class="footerChat">
+                <input type="text" id="messageInput" placeholder="Digite sua mensagem">
+                <button id="sendMessage">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const username = localStorage.getItem('username');
+            const socket = io({
+                query: { username }
+            });
+            var currentRoom = "";
+            const userRoomsElement = document.getElementById('userRooms');
+            const newRoomInput = document.getElementById('newRoom');
+            const enterNewRoomButton = document.getElementById('enterNewRoom');
+            const messagesElement = document.getElementById('messages');
+            const messageInput = document.getElementById('messageInput');
+            const sendMessageButton = document.getElementById('sendMessage');
+            const headChat = document.getElementById('headChat');
+            const chatContainer = document.querySelector('#chat .container');
+            const chatH1 = document.querySelector('#chat h1');
+
+            socket.emit('get-user-rooms');
+
+            if (currentRoom == "") {
+                chatContainer.style.display = "none";
+                chatH1.style.display = "flex";
+            } else {
+                chatContainer.style.display = "flex";
+                chatH1.style.display = "none";
+            }
+
+            function renderRooms(rooms) {
+                userRoomsElement.innerHTML = '';
+                rooms?.forEach((room) => {
+                    const li = document.createElement('li');
+                    li.innerText = room;
+                    li.addEventListener('click', (e) => {
+                        if (currentRoom !== room && e.target == li) {
+                            localStorage.setItem('room', room);
+                            currentRoom = room;
+                            headChat.innerText = room
+                            messagesElement.innerHTML = '';
+                            socket.emit('join-room', room, username);
+                            chatContainer.style.display = "flex";
+                            chatH1.style.display = "none";
+                        }
+
+                    });
+                    const remover = document.createElement('button');
+                    remover.innerHTML = "Remover";
+                    remover.addEventListener('click', (e) => {
+                        console.log(e.target);
+                        socket.emit('delete-room', room);
+                    })
+                    li.appendChild(remover);
+                    userRoomsElement.appendChild(li);
+                });
+            }
+
+            function renderMessages(messages) {
+                messages?.forEach(data => {
+                    const li = document.createElement('li');
+                    li.classList.add('message');
+                    if (data.user == username) {
+                        li.classList.add('right');
+                    } else {
+                        li.classList.add('left');
+                    }
+                    li.innerText = `${data.user}: ${data.message} ${data.time}`;
+                    messagesElement.appendChild(li);
+                });
+            }
+
+            socket.on('user-rooms', (rooms) => {
+                renderRooms(rooms);
+            });
+
+            socket.on('room-messages', (messages) => {
+                renderMessages(messages);
+            });
+
+            enterNewRoomButton.addEventListener('click', () => {
+                const newRoom = newRoomInput.value.trim();
+                if (newRoom && /^[a-zA-Z0-9]+$/.test(newRoom)) {
+                    socket.emit('leave-room', currentRoom);
+                    localStorage.setItem('room', newRoom);
+                    currentRoom = newRoom;
+                    headChat.innerText = newRoom
+                    messagesElement.innerHTML = '';
+                    chatContainer.style.display = "flex";
+                    chatH1.style.display = "none";
+                    socket.emit('join-room', newRoom, username);
+                }
+            });
+
+            sendMessageButton.addEventListener('click', () => {
+                const message = messageInput.value.trim();
+                if (message) {
+                    socket.emit('send-message', { room: currentRoom, message: message, user: username });
+                    messageInput.value = '';
+                }
+            });
+
+            messageInput.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter' || event.keyCode === 13) {
+                    const message = messageInput.value.trim();
+                    if (message) {
+                        socket.emit('send-message', { room: currentRoom, message: message, user: username });
+                        messageInput.value = '';
+                    }
+                }
+            });
+
+            socket.on('message', (data) => {
+                const li = document.createElement('li');
+                li.classList.add('message');
+                li.innerText = `${data.user}: ${data.message} ${data.time}`;
+                messagesElement.appendChild(li);
+            });
+
+            socket.on('joined-user', (user) => {
+                const li = document.createElement('li');
+                li.classList.add('joined-user');
+                li.innerText = `${user} entrou na sala.`;
+                messagesElement.appendChild(li);
+            });
+
+            socket.on('user-left', (user) => {
+                const li = document.createElement('li');
+                li.classList.add('user-left');
+                li.innerText = `${user} entrou na sala.`;
+                messagesElement.appendChild(li);
+            });
+
+        });
+    </script>
+</body>
+
+</html>

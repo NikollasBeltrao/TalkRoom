@@ -1,0 +1,185 @@
+{
+  "teste": {
+    "users": [
+      "nikollas",
+      "user3",
+      null,
+      "user4",
+      "user2"
+    ],
+    "messages": [
+      {
+        "user": "user3",
+        "message": "salve",
+        "time": "2024-07-27T16:58:46.017Z"
+      },
+      {
+        "user": "nikollas",
+        "message": "opa",
+        "time": "2024-08-27T17:00:20.569Z"
+      },
+      {
+        "user": "nikollas",
+        "message": "opa",
+        "time": "2024-08-27T17:00:25.575Z"
+      },
+      {
+        "user": "nikollas",
+        "message": "salve",
+        "time": "2024-08-27T17:00:31.903Z"
+      },
+      {
+        "user": "user3",
+        "message": "slave",
+        "time": "2024-08-27T17:01:57.621Z"
+      },
+      {
+        "user": "user3",
+        "message": "a",
+        "time": "2024-08-27T17:07:48.319Z"
+      },
+      {
+        "user": "user2",
+        "message": "asdad",
+        "time": "2024-08-27T17:13:38.344Z"
+      },
+      {
+        "user": "user3",
+        "message": "spdasdlds",
+        "time": "2024-08-27T17:13:59.600Z"
+      },
+      {
+        "user": "user3",
+        "message": "asdas",
+        "time": "2024-08-27T17:14:12.712Z"
+      },
+      {
+        "user": "user3",
+        "message": "aaaaaaaaaaaaaa",
+        "time": "2024-08-27T17:14:24.192Z"
+      },
+      {
+        "user": "user3",
+        "message": "asdasd",
+        "time": "2024-08-27T17:16:30.496Z"
+      },
+      {
+        "user": "user3",
+        "message": "asdasd",
+        "time": "2024-08-27T17:16:47.967Z"
+      },
+      {
+        "user": "nikollas",
+        "message": "asdadad",
+        "time": "2024-08-29T16:37:45.255Z"
+      },
+      {
+        "user": "nikollas",
+        "message": "asdad",
+        "time": "2024-08-29T16:37:49.839Z"
+      },
+      {
+        "user": "nikollas",
+        "message": "asdasd",
+        "time": "2024-08-29T16:37:52.303Z"
+      },
+      {
+        "user": "nikollas",
+        "message": "sdasd",
+        "time": "2024-08-29T17:08:58.908Z"
+      },
+      {
+        "user": "nikollas",
+        "message": "opa",
+        "time": "2024-08-29T17:09:14.676Z"
+      },
+      {
+        "user": "nikollas",
+        "message": "salve",
+        "time": "2024-08-30T16:43:31.103Z"
+      },
+      {
+        "user": "nikollas",
+        "message": "opa",
+        "time": "2024-08-30T16:43:43.758Z"
+      }
+    ]
+  },
+  "sala": {
+    "users": [
+      "nikollas",
+      "user2",
+      "user1"
+    ],
+    "messages": [
+      {
+        "user": "nikollas",
+        "message": "opa",
+        "time": "2024-08-28T14:36:55.841Z"
+      },
+      {
+        "user": "user2",
+        "message": "salve",
+        "time": "2024-08-28T14:36:59.617Z"
+      },
+      {
+        "user": "user1",
+        "message": "opa",
+        "time": "2024-08-28T14:37:50.805Z"
+      },
+      {
+        "user": "user1",
+        "message": "opa",
+        "time": "2024-08-28T14:38:00.453Z"
+      },
+      {
+        "user": "user2",
+        "message": "opa",
+        "time": "2024-08-28T15:54:51.060Z"
+      }
+    ]
+  },
+  "salve": {
+    "users": [
+      "nikollas"
+    ],
+    "messages": []
+  },
+  "teste2": {
+    "users": [],
+    "messages": []
+  },
+  "aa": {
+    "users": [],
+    "messages": [
+      {
+        "user": "user2",
+        "message": "teste",
+        "time": "2024-08-28T15:01:35.697Z"
+      }
+    ]
+  },
+  "teste3": {
+    "users": [
+      "nikollas"
+    ],
+    "messages": []
+  },
+  "minhasala": {
+    "users": [
+      "user4"
+    ],
+    "messages": [
+      {
+        "user": "user4",
+        "message": "sadasd",
+        "time": "2024-08-27T17:16:25.600Z"
+      },
+      {
+        "user": "user4",
+        "message": "aasdadsa",
+        "time": "2024-08-27T17:16:43.680Z"
+      }
+    ]
+  }
+}
