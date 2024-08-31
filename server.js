@@ -53,7 +53,7 @@ io.on('connection', (socket) => {
 
     socket.on('leave-room', (room) => {
         socket.leave(room);
-        io.to(room).emit('user-left', socket.username);
+        io.to(room).emit('user-leave', socket.username);
     });
 
     socket.on('delete-room', (room) => {
@@ -131,7 +131,7 @@ function formatDate(dateString) {
     }
 }
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4242;
 server.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });

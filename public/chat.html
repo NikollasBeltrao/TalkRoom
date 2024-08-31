@@ -8,7 +8,10 @@
     <style>
         * {
             box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: #888 #f1f1f1;
         }
+
         body {
             font-family: Arial, sans-serif;
             height: 100vh;
@@ -19,7 +22,7 @@
             margin: 0;
             padding: 0;
             background-color: #F1F1F1;
-            
+
         }
 
         .sidebar {
@@ -33,9 +36,15 @@
             float: left;
         }
 
-        .newRoom input {
+        input {
             padding: 10px;
-            border-radius: 3px;
+            border-radius: 5px;
+            width: 100%;
+            border: solid 1px rgb(202, 202, 202);
+        }
+
+        .newRoom button {
+            white-space: nowrap;
         }
 
         button {
@@ -43,6 +52,9 @@
             border-radius: 5px;
             background-color: #00695c;
             color: white;
+            border: none;
+            margin-left: 20px;
+            cursor: pointer;
         }
 
         .sidebar h2 {
@@ -52,7 +64,12 @@
         }
 
         #userRooms {
-            margin: 0px 20px;
+            padding: 10px;
+        }
+
+        #userRooms li span {
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         #userRooms li,
@@ -149,6 +166,27 @@
             width: auto;
             align-self: flex-start;
             z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            text-align: start;
+            gap: 2px;
+        }
+
+        .message .message-time {
+            float: right;
+            color: #848484;
+            font-size: 10px;
+            align-self: flex-end;
+        }
+
+        .message.left .message-user {
+            font-weight: bold;
+            color: #00695c;
+        }
+
+        .message.right .message-user {
+            display: none;
         }
 
         .message.right {
@@ -190,16 +228,35 @@
             justify-content: space-between;
         }
 
-        .footerChat input {
-            padding: 10px;
-            border-radius: 3px;
-            width: 100%;
-        }
-
         .footerChat button {
-           margin: 0px 10px;
+            margin: 0px 10px;
         }
 
+        .user-leave, .user-join {
+            color: #848484;
+            font-size: 15px;
+            font-style: italic;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 10px;
+            border: 2px solid #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 
@@ -208,7 +265,7 @@
         <h2>Chats</h2>
         <div class="newRoom">
             <input type="text" id="newRoom" placeholder="Nova Sala">
-            <button id="enterNewRoom">Criar sala</button>
+            <button id="enterNewRoom">Entrar/Criar sala</button>
         </div>
         <ul id="userRooms"></ul>
     </div>
@@ -256,7 +313,7 @@
                 userRoomsElement.innerHTML = '';
                 rooms?.forEach((room) => {
                     const li = document.createElement('li');
-                    li.innerText = room;
+                    li.innerHTML = `<span>${room}</span>`;
                     li.addEventListener('click', (e) => {
                         if (currentRoom !== room && e.target == li) {
                             localStorage.setItem('room', room);
@@ -282,16 +339,25 @@
 
             function renderMessages(messages) {
                 messages?.forEach(data => {
-                    const li = document.createElement('li');
+                    addMessage(data);
+                });
+            }
+
+            function addMessage (data) {
+                const li = document.createElement('li');
                     li.classList.add('message');
                     if (data.user == username) {
                         li.classList.add('right');
                     } else {
                         li.classList.add('left');
                     }
-                    li.innerText = `${data.user}: ${data.message} ${data.time}`;
+                    li.innerHTML = `
+                        <span class="message-user">${data.user} </span>
+                        <span class="message-content">${data.message}</span>
+                        <span class="message-time">${data.time}</span>
+                    `;
                     messagesElement.appendChild(li);
-                });
+                    messagesElement.scrollTop = messagesElement.scrollHeight;
             }
 
             socket.on('user-rooms', (rooms) => {
@@ -303,6 +369,16 @@
             });
 
             enterNewRoomButton.addEventListener('click', () => {
+                enterRoom();
+            });
+
+            newRoomInput.addEventListener('keyup', () => {
+                if (event.key === 'Enter' || event.keyCode === 13) {
+                    enterRoom();
+                }
+            });
+
+            function enterRoom() {
                 const newRoom = newRoomInput.value.trim();
                 if (newRoom && /^[a-zA-Z0-9]+$/.test(newRoom)) {
                     socket.emit('leave-room', currentRoom);
@@ -314,7 +390,7 @@
                     chatH1.style.display = "none";
                     socket.emit('join-room', newRoom, username);
                 }
-            });
+            }
 
             sendMessageButton.addEventListener('click', () => {
                 const message = messageInput.value.trim();
@@ -335,24 +411,23 @@
             });
 
             socket.on('message', (data) => {
-                const li = document.createElement('li');
-                li.classList.add('message');
-                li.innerText = `${data.user}: ${data.message} ${data.time}`;
-                messagesElement.appendChild(li);
+                addMessage(data);
             });
 
             socket.on('joined-user', (user) => {
                 const li = document.createElement('li');
-                li.classList.add('joined-user');
+                li.classList.add('user-join');
                 li.innerText = `${user} entrou na sala.`;
                 messagesElement.appendChild(li);
+                messagesElement.scrollTop = messagesElement.scrollHeight;
             });
 
-            socket.on('user-left', (user) => {
+            socket.on('user-leave', (user) => {
                 const li = document.createElement('li');
-                li.classList.add('user-left');
+                li.classList.add('user-leave');
                 li.innerText = `${user} entrou na sala.`;
                 messagesElement.appendChild(li);
+                messagesElement.scrollTop = messagesElement.scrollHeight;
             });
 
         });

@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Web - Entrar/Criar Sala</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #e0f7fa;
+            background-color: #F1F1F1;
         }
+
         .container {
             background: #ffffff;
             padding: 20px;
@@ -21,10 +27,12 @@
             width: 300px;
             text-align: center;
         }
+
         h2 {
             color: #00796b;
             margin-bottom: 20px;
         }
+
         input {
             width: 100%;
             padding: 10px;
@@ -33,6 +41,7 @@
             border: 1px solid #00796b;
             font-size: 16px;
         }
+
         button {
             width: 100%;
             padding: 12px;
@@ -43,9 +52,11 @@
             font-size: 16px;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #004d40;
         }
+
         .error {
             color: red;
             margin-top: 10px;
@@ -53,11 +64,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h2>Entrar ou Criar Sala</h2>
+        <h2>Entrar</h2>
         <input type="text" id="username" placeholder="Nome de Usuário">
-        <!--<input type="text" id="room" placeholder="Nome da sala">-->
         <button id="enterRoom">Entrar/Criar Sala</button>
         <div class="error" id="error"></div>
     </div>
@@ -67,30 +78,35 @@
         const usernameInput = document.getElementById('username');
         const enterRoomButton = document.getElementById('enterRoom');
         const errorElement = document.getElementById('error');
-        //const newRoomInput = document.getElementById('room');
+
+        usernameInput.focus();
 
         enterRoomButton.addEventListener('click', () => {
+            entrar();
+        });
+
+        usernameInput.addEventListener('keyup', () => {
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                entrar();
+            }
+        });
+
+        function entrar() {
             errorElement.innerText = "";
             errorElement.style.display = 'none';
-            
-            /*const newRoom = newRoomInput.value.trim();
-            if (!newRoom || !/^[a-zA-Z0-9]+$/.test(newRoom)) {
-                errorElement.innerText = "Nome de sala inválido! Use apenas letras e números.\n";
-                errorElement.style.display = 'block';
-            }
-            */
+
             const username = usernameInput.value.trim();
             if (username === "") {
-                errorElement.innerText = errorElement.innerText + " Preencha todos os campos";
+                errorElement.innerText = errorElement.innerText + "o nome é obrigatório";
                 errorElement.style.display = 'block';
             } else {
                 errorElement.innerText = "";
                 errorElement.style.display = 'none';
                 localStorage.setItem('username', username);
-               // localStorage.setItem('room', newRoom);
                 window.location.href = '/chat.html';
             }
-        });
+        }
     </script>
 </body>
+
 </html>

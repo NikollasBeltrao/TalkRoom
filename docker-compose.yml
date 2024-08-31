@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  app:
+    image: node:20
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    working_dir: /usr/src/app
+    ports:
+      - "4242:4242"
+    command: npm start
