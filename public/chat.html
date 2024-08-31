@@ -486,7 +486,7 @@
 
             function enterRoom() {
                 const newRoom = newRoomInput.value.trim();
-                if (newRoom && /^[a-zA-Z0-9]+$/.test(newRoom)) {
+                if (newRoom) { // && /^[a-zA-Z0-9]+$/.test(newRoom)
                     socket.emit('leave-room', currentRoom);
                     localStorage.setItem('room', newRoom);
                     currentRoom = newRoom;
