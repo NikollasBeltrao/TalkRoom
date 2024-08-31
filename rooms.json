@@ -1,12 +1,12 @@
 {
   "teste": {
     "users": [
-      "nikollas",
       "user3",
       null,
       "user4",
       "user2",
-      "nikolas"
+      "nikolas",
+      "nikollas"
     ],
     "messages": [
       {
@@ -218,12 +218,31 @@
         "user": "nikolas",
         "message": "as",
         "time": "2024-08-31T00:36:29.504Z"
+      },
+      {
+        "user": "nikollas",
+        "message": "a",
+        "time": "2024-08-31T03:48:22.240Z"
+      },
+      {
+        "user": "nikollas",
+        "message": "asdasd asda lsdal asd asdç asdaç dnasçkasndçasdnas asçasd alsd asd nasçld asçd",
+        "time": "2024-08-31T03:48:40.312Z"
+      },
+      {
+        "user": "nikollas",
+        "message": "sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss sadasdasdas asdasdasasd asdasdasd asdasdasd asa a as sadasdasd as dasd as dasd",
+        "time": "2024-08-31T03:49:00.583Z"
+      },
+      {
+        "user": "nikollas",
+        "message": "testeasdadsf",
+        "time": "2024-08-31T04:52:48.645Z"
       }
     ]
   },
   "sala": {
     "users": [
-      "nikollas",
       "user2",
       "user1",
       "nikolas"
@@ -272,9 +291,7 @@
     ]
   },
   "salve": {
-    "users": [
-      "nikollas"
-    ],
+    "users": [],
     "messages": []
   },
   "teste2": {
@@ -292,9 +309,7 @@
     ]
   },
   "teste3": {
-    "users": [
-      "nikollas"
-    ],
+    "users": [],
     "messages": []
   },
   "minhasala": {
@@ -383,6 +398,10 @@
     "messages": []
   },
   "dfgdfgdfgdfgdfg": {
+    "users": [],
+    "messages": []
+  },
+  "trs": {
     "users": [],
     "messages": []
   }
